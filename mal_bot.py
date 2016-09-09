@@ -3,10 +3,6 @@ import re
 import os
 import sys
 from pprint import pprint
-from base64 import b64encode
-from urllib import response
-from bs4 import BeautifulSoup
-from xml.sax.saxutils import unescape
 from mal_bot_config import *
 from mal_bot_funcs import *
 
@@ -39,9 +35,10 @@ for comment in submission.comments:
 	# Get all the anime in a comment
 	groups = re.findall(regex, comment.body)
 	if(len(groups) != 0):
-		str = 'I found the following anime in your comment:\n\n'
+		str = ''
 		for anime in groups:
-			str = str + '* '+anime
+			str = str + getAnimeStats(anime)
+			str += '\n\n---\n\n'
 		str += FOOTER
 		# Try to reply to the comment
 		try:
