@@ -1,7 +1,10 @@
 #-----------------------------------
 # MAL Bot Configuration
 #-----------------------------------
-USER_AGENT = 'myanimelist_bot v0.11 by /u/linkian209'
-USERNAME = 'myanimelist_bot'
-PASSWORD = 'Iup32ptb!'
-FOOTER = '\n\n---\n\n^^^This ^^^comment ^^^was ^^^automatically ^^^created ^^^by ^^^myanimelist_bot. ^^^For ^^^feedback ^^^and ^^^bug ^^^reports, ^^^visit ^^^/r/myanimelist_bot. ^^^どうもありがとございます！'
+VERSION = '0.5'
+USER_AGENT = 'myanimelist_bot v' + VERSION + ' by /u/linkian209'
+USERNAME = ''
+PASSWORD = ''
+MAL_UN = b''
+MAL_PW = b''
+FOOTER = '^^^This ^^^comment ^^^was ^^^automatically ^^^created ^^^by ^^^myanimelist_bot ^^^v' + VERSION + '. ^^^Do ^^^not ^^^reply, ^^^I ^^^am ^^^a ^^^bot. ^^^For ^^^feedback ^^^and ^^^bug ^^^reports, ^^^visit ^^^/r/myanimelist_bot. ^^^どうもありがとございます！'
