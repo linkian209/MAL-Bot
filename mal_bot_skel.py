@@ -1,7 +1,7 @@
 #-----------------------------------
 # MAL Bot Configuration
 #-----------------------------------
-VERSION = '0.5'
+VERSION = '0.6'
 USER_AGENT = 'myanimelist_bot v' + VERSION + ' by /u/linkian209'
 USERNAME = ''
 PASSWORD = ''
