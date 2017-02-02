@@ -21,6 +21,51 @@ def printList(list):
 		str = str + i + ', '
 	str += ']'
 	print(str)
+
+# Split the name up and try to get a better match for an anime
+def splitNameAndGetStats(anime):
+	split_name = anime.split()
+	anime_details = {}
+	for name in split_name:
+		# Make Request
+		req = request.Request('https://myanimelist.net/api/anime/search.xml?q='+name)
+		req.add_header('Authorization','Basic %s' % b64encode(b'%s:%s' % (MAL_UN, MAL_PW)).decode('utf-8'))
+		raw = request.urlopen(req)
+	
+		# Parse request into a better xml object
+		xml = BeautifulSoup(unescape(raw.read().decode('utf-8')), 'xml')
+	
+		# Put the entry closest to the queried anime into a dict
+		punct = re.compile('[%s]' % re.escape(string.punctuation))
+		for item in xml.find_all('entry'):
+			# Find the closest match to the entered title, check between Japanese and English
+			japanese_closeness = SequenceMatcher(None, re.sub(punct,' ',anime.lower()), re.sub(punct,' ',item.title.string.lower())).ratio()
+			english_closeness = SequenceMatcher(None, re.sub(punct,' ',anime.lower()), re.sub(punct,' ',str(item.english.string).lower())).ratio()
+			closeness = max(japanese_closeness, english_closeness)
+			if(len(anime_details.keys()) is 0 or anime_details['closeness'] < closeness):
+				try:
+					print('old closeness: {}'.format(anime_details['closeness']))
+					print('old name: {}'.format(anime_details['name']))
+				except:
+					print('')
+				print('new closeness: {}'.format(closeness))
+				print('new name: {}'.format(str(item.title.string)))
+				anime_details['id'] = str(item.id.string)
+				anime_details['closeness'] = closeness
+				anime_details['name'] = str(item.title.string)
+				anime_details['synopsis'] = item.synopsis.text
+				anime_details['episodes'] = str(item.episodes.string)
+				anime_details['type'] = str(item.type.string)
+				anime_details['score'] = str(item.score.string)
+				anime_details['english'] = str(item.english.string)
+				anime_details['synonyms'] = str(item.synonyms.string)
+				anime_details['status'] = str(item.status.string)
+				anime_details['start_date'] = str(item.start_date.string)
+				anime_details['end_date'] = str(item.end_date.string)
+				anime_details['image'] = str(item.image.string)
+				
+	# Return the details
+	return anime_details
 	
 # Get MAL info about an anime
 def getAnimeStats(anime):
@@ -64,7 +109,11 @@ def getAnimeStats(anime):
 			anime_details['start_date'] = str(item.start_date.string)
 			anime_details['end_date'] = str(item.end_date.string)
 			anime_details['image'] = str(item.image.string)
-		
+			
+	# If the final closeness isn't good enough, break anime name up and try for a closer match.
+	if anime_details['closeness'] < MIN_ACCEPTABLE_CLOSENESS:
+		anime_details = splitNameAndGetStats(anime)
+	
 	# Format Synopsis (remove [i] and [b] and add '>' after '\n\n')
 	anime_details['synopsis'] = re.sub('\[/?i\]','*',anime_details['synopsis'])
 	anime_details['synopsis'] = re.sub('\[/?b\]','**',anime_details['synopsis'])

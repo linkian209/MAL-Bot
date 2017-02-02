@@ -2,7 +2,6 @@ import praw
 import re
 import os
 import sys
-from pprint import pprint
 from mal_bot_config import *
 from mal_bot_funcs import *
 
@@ -22,7 +21,6 @@ else:
     with open("posts_replied_to.txt", "r") as f:
        raw = f.read()
        replied_to = raw.split("\n")
-       #replied_to = filter(None, raw)
 
 # Check comments
 for comment in submission.comments:
